@@ -5,7 +5,7 @@
 int main(){
 
     struct Matrix *matriz = (Matrix *)malloc(sizeof(Matrix));
-    struct Matrix *matriz2 = (Matrix *)malloc(sizeof(Matrix));
+    struct Matrix2 matriz2; 
     int i,j,x,opt;
     
     mt=1;
@@ -39,11 +39,10 @@ int main(){
         
         case 0://creacion de matrices
             mt=2;
-	    	create_matrix(matriz2);
-	    	for (int i = 0; i < matriz2->size_m; i++)
-    	    	{
-        		add_itemx(matriz2,i);
-            	}
+	    	printf("Introduzca el numero de fila: ");
+            scanf("%d",&matriz2.size_m);
+            printf("Introduzca el numero de columnas");
+            scanf("%d",&matriz2.size_n);
             break;
         
         case 1: //obtiene elemento
