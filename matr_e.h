@@ -1,4 +1,4 @@
-typedef struct Datos
+typedef struct Matrix2
 {
 	int size_m;
     	int size_n;
@@ -6,7 +6,7 @@ typedef struct Datos
     	int j;
     	int  value;
 
-}dato;
+}Matrix2;
 
 typedef struct Matrix
 {
@@ -87,6 +87,7 @@ void add_itemy(Row *fila,int j){
         struct Cell *celda = create_cell(j,0);
         struct Cell *aux;
         struct Cell *now = fila->celda;
+        
         while (now != NULL)
         {
             aux = now;
@@ -160,24 +161,7 @@ while (now!= NULL)
 
 }
 
-void Sumar( Matrix *matriz,Matrix *matriz2) {
-Matrix *aux1 = matriz;
-Matrix *aux2 = matriz2;
-
- for (;aux1->rowlist != NULL; aux1->rowlist = aux1->rowlist->next) 
-    {
-        printf("%d -->",aux1->rowlist->posicion);
-        for ( ; aux1->rowlist->celda!=NULL; aux1->rowlist->celda = aux1->rowlist->celda->next)
-        {
-            printf("%d -->",aux2->rowlist->celda->value+aux1->rowlist->celda->value);
-            aux2->rowlist->celda = aux2->rowlist->celda->next;
-        }
-        printf("\n");
-        aux2->rowlist = aux2->rowlist->next;  
-    }
-    
-    printf("\n"); 
-
+void Sumar( Matrix *matriz,Matrix2 matriz2) {
 }
 
 void ProductoPorEscalar( Matrix *matriz,int valor){
@@ -203,40 +187,43 @@ void ProductoPorEscalar( Matrix *matriz,int valor){
    
 }
 
-void Producto( Matrix *matriz,Matrix *matriz2){
-int multiplicacion;
-
-	for (;matriz->rowlist->celda!=NULL; matriz->rowlist->celda = matriz->rowlist->celda->next)
-	{
-		
-		for (;matriz2->rowlist != NULL; matriz2->rowlist = matriz2->rowlist->next)
-		{
-			multiplicacion=0;
-			for(;matriz2->rowlist->celda!=NULL; matriz2->rowlist->celda = matriz2->rowlist->celda->next)
-			{
-				multiplicacion=matriz->rowlist->celda->value*matriz2->rowlist->celda->value;
-				matriz->rowlist->celda->value=multiplicacion;
-				matriz->rowlist->celda = matriz->rowlist->celda->next;
-			}
-		}
-	}
+void Producto( Matrix *matriz,Matrix2 matriz2){
 }
 
 void Transponer( Matrix *matriz){
-int i=0,j=0,transpuesta[1000][1000],b,a;
-	
-	for (;matriz->rowlist->celda!=NULL; matriz->rowlist->celda = matriz->rowlist->celda->next)
-	{
-		
-		for (;matriz->rowlist != NULL; matriz->rowlist = matriz->rowlist->next)
-		{			
-			if (matriz->rowlist->celda->value != 0)
-            		{
-            		printf(" Pos:%d Valor:%d -->",matriz->rowlist->celda->posicion,matriz->rowlist->celda->value);
-            		}
-		}
-	}
-
+int aux[1000][1000],a,b,i,j;
+int transp[1000][1000];
+i=0;j=0;
+ for (;matriz->rowlist != NULL; matriz->rowlist = matriz->rowlist->next)
+    {
+        
+        for ( ; matriz->rowlist->celda!=NULL; matriz->rowlist->celda = matriz->rowlist->celda->next) 
+        {
+    aux[i][j]=matriz->rowlist->celda->value;
+    j++;
+  }
+  b=j;
+  j=0;
+  i++;
+  a=i;
+ }
+ 
+ for(i=0;i<b;i++)
+ {
+  for(j=0;j<a;j++)
+  {
+   transp[j][i]=aux[i][j];
+  }
+ }
+ 
+ for(i=0;i<a;i++)
+ {
+  for(j=0;j<b;j++)
+  {
+  printf("%d -->",transp[i][j]); 
+  }
+  printf("\n");
+ }
 }
 	
 void ObtenerElemento( Matrix *matriz,int n,int m){
@@ -283,40 +270,47 @@ void AsignarElemento(Matrix *matriz,int n, int m,int value,int a){
     struct Cell *aux2;
     struct Cell *celda;
     struct Cell *asig = create_cell(m,value);
-    struct Datos m1[cont];
+    struct Matrix2 m2;
 
-    for (int i = 0; i < n; i++)
+    if (mt == 1)
     {
-        aux = fila;
-        fila = fila->next;
-    }
-    celda = fila->celda;
+        
+        for (int i = 0; i < n; i++)
+        {
+            aux = fila;
+            fila = fila->next;
+        }
+        celda = fila->celda;
 	
-    for (int i = 0; i < m; i++)
-    {
-        aux2 = celda;
-        celda = celda->next;
-    }
-    if (matriz->rowlist->celda == celda)
-    {
-        matriz->rowlist->celda->value = value;
-    }
-    else
-    {
-        celda->value = value;
-    }
-    asig->next = celda;
+        for (int i = 0; i < m; i++)
+        {
+            aux2 = celda;
+            celda = celda->next;
+        }
+        if (matriz->rowlist->celda == celda)
+        {
+            matriz->rowlist->celda->value = value;
+        }
+        else
+        {
+            celda->value = value;
+        }
+        asig->next = celda;
 
-    if(mt == 1){
+    }
+    
+    if(mt == 2){
 
         FILE *data;
 
-        data = fopen("m1.bin", "wb");
+        data = fopen("m2.bin", "wb");
 
         fseek(data,0,SEEK_END);
-        fprintf(data,"%d, %d, %d",m1[a].i,m1[a].j,m1[a].value);
+        m2.i = n;
+        m2.j = m;
+        m2.value = value;
     
-        fwrite(&m1[a],sizeof(dato),3,data);
+        fwrite(&m2,sizeof(Matrix2),3,data);
 
         fclose(data);
 
